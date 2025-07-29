@@ -3,7 +3,9 @@ import { AssignmentsController } from './assignments.controller';
 import { AssignmentsService } from './assignments.service';
 
 @Module({
-  controllers: [AssignmentsController],
-  providers: [AssignmentsService]
+  controllers: [AssignmentsController],//בקרים שיטפלו בבקשות HTTP
+  providers: [AssignmentsService],//שירותים שאני מזריק למודול ונותן לו אפשרות להשתמש בהם
+  imports:[],//מודלים אחרים שאני רוצה להתשמש בהם
+  exports:[]//מודלים שאני רוצה לייצא לשימוש במודלים אחרים
 })
 export class AssignmentsModule {}

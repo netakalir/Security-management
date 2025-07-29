@@ -9,15 +9,15 @@ export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
     @Post("login")
-    login(@Body() loginDto: { name: string; role: string }) {
-        const messge = this.authService.login(loginDto.name, loginDto.role)
-        return { messge: messge }
+    async login(@Body() loginDto: { name: string;  password: string }) {
+        const messge = await this.authService.login(loginDto.name ,loginDto.password)
+        return { message: messge }
     }
 
     @Post("register")
-    register(@Body() loginDto: { name: string; role: string; password: string }) {
+    register(@Body() loginDto: { name: string; role: "soldier" | "commander"; password: string }) {
         const messge = this.authService.register(loginDto.name, loginDto.role, loginDto.password)
-        return { messge: messge }
+        return { message: messge }
     }
 
 
