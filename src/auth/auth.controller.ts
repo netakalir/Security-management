@@ -15,8 +15,8 @@ export class AuthController {
     }
 
     @Post("register")
-    async register(@Body() loginDto: { name: string; role: "soldier" | "commander"; password: string }) {
-        const messge = await this.authService.register(loginDto.name, loginDto.role, loginDto.password)
+    async register(@Body() loginDto: { name: string; password: string }) {
+        const messge = await this.authService.register(loginDto.name, loginDto.password)
         return { message: messge }
     }
 

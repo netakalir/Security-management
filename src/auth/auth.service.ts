@@ -13,21 +13,28 @@ export class AuthService {
     constructor(public userService: UsersService, private jwtService: JwtService) { }
 
     async login(name: string, password: string): Promise<string | null> {
+        let token: string;
         const user = await this.userService.findOne(name);
-        if (user && user?.password === password) {
+        console.log(user);
+        if (user) {
             try {
+                const isVerify = await this.verifyPassword(password, user.password || "")
+                if (!isVerify) {
+                    return "password not verify"
+                }
+                token = await this.createToken(user)
                 if (user?.role === "soldier") {
-                    const token = await this.createToken(user)
                     if (token) {
-                        return `login ${user.role} successfully! token: ${token.token}`;
-                    }
+                        return `login ${user.role} successfully! token: ${token}`;
+                    } 
                 }
                 else if (user?.role === "commander") {
-                    const token = await this.createToken(user)
                     if (token) {
-                        return `login ${user.role} successfully! token: ${token.token}`;
+                        return `login ${user.role} successfully! token: ${token}`;
                     }
                 }
+
+
             } catch (error) {
                 console.log(error);
             }
@@ -36,18 +43,17 @@ export class AuthService {
         throw new UnauthorizedException();
     }
 
-    async register(name: string, role: "soldier" | "commander", password: string,) {
+    async register(name: string, password: string,) {
         try {
             const users = this.userService.getAllUsers()
-            const user = users.find(u => u.name == name && u.role === role && u.password === password);
+            const user = users.find(u => u.name == name  && u.password === password);
             if (user) {
                 return "user allready exist"
             }
             else {
                 const hash = await this.hashPassword(password, 10)
-                const newUser = { name: name, role: role, password: hash }
-                users.push(newUser)
-                return `register ${newUser.name} successfully , hash:${hash}`
+                users.push({ name: name, role: 'soldier', password: hash })
+                return `register ${name} successfully , hash:${hash}`
             }
         } catch (error) {
             console.log({ msg: "register faild", error });
@@ -55,19 +61,16 @@ export class AuthService {
         return null
     }
 
-    async createToken(
-        user: User
-    ): Promise<{ token: string }> {
+    async createToken(user: User): Promise<string> {
         const payload = { name: user.name, role: user.role };
-        return {
-            token: await this.jwtService.signAsync(payload),
-        };
-    }
+        return await this.jwtService.signAsync(payload)
+    }  
+    
 
 
 
     // hash password
-    async hashPassword(password: string, salt: number): Promise<string|null> {
+    async hashPassword(password: string, salt: number): Promise<string | null> {
         try {
             const hash = await bcrypt.hash(password, salt)
             return hash;
