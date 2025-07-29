@@ -10,6 +10,6 @@ import { jwtConstants } from './auth.constants';
   imports:[UsersModule,JwtModule.register({global:true,secret:jwtConstants.secret,signOptions:{expiresIn:'5h'}})],//מודלים אחרים שאני רוצה להתשמש בהם
   exports:[AuthService],//מודלים שאני רוצה לייצא לשימוש במודלים אחרים
   controllers: [AuthController],//בקרים שיטפלו בבקשות HTTP
-  providers: [AuthService,UsersService]//שירותים שאני מזריק למודול ונותן לו אפשרות להשתמש בהם
+  providers: [AuthService]//שירותים שאני מזריק למודול מהמודל הנוכחי בלבד ונותן לו אפשרות להשתמש בהם
 })
 export class AuthModule {}

@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User, UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from "bcrypt"
+import * as bcrypt from "bcrypt"
 import { config } from "dotenv"
 config()
 import rl from "readline-sync"
@@ -12,45 +12,47 @@ import rl from "readline-sync"
 export class AuthService {
     constructor(public userService: UsersService, private jwtService: JwtService) { }
 
-    async login(name: string, password: string): Promise<string|null> {
+    async login(name: string, password: string): Promise<string | null> {
         const user = await this.userService.findOne(name);
         if (user && user?.password === password) {
             try {
                 if (user?.role === "soldier") {
-                //create token
-                
-                const token = await this.createToken(user)
-                if (token) {
-                    return `login ${user.role} successfully! token: ${token.token}`;
+                    const token = await this.createToken(user)
+                    if (token) {
+                        return `login ${user.role} successfully! token: ${token.token}`;
+                    }
                 }
-            }
-            else if (user?.role === "commander") {
-                //create token
-                const token = await this.createToken(user)
-                if (token) {
-                    return `login ${user.role} successfully${token.token}`;
+                else if (user?.role === "commander") {
+                    const token = await this.createToken(user)
+                    if (token) {
+                        return `login ${user.role} successfully! token: ${token.token}`;
+                    }
                 }
-            }
             } catch (error) {
                 console.log(error);
             }
-            
+
         }
         throw new UnauthorizedException();
     }
 
-    register(name: string, role: "soldier" | "commander", password: string,): string {
-        const users = this.userService.getAllUsers()
-        const user = users.find(u => u.name == name && u.role === role && u.password === password);
-        if (user) {
-            return "user allready exist"
+    async register(name: string, role: "soldier" | "commander", password: string,) {
+        try {
+            const users = this.userService.getAllUsers()
+            const user = users.find(u => u.name == name && u.role === role && u.password === password);
+            if (user) {
+                return "user allready exist"
+            }
+            else {
+                const hash = await this.hashPassword(password, 10)
+                const newUser = { name: name, role: role, password: hash }
+                users.push(newUser)
+                return `register ${newUser.name} successfully , hash:${hash}`
+            }
+        } catch (error) {
+            console.log({ msg: "register faild", error });
         }
-        else {
-            const newUser = { name: name, role: role, password: password }
-            users.push(newUser)
-            return `register ${newUser.name} successfully`
-        }
-        // return "register faild" convert to try/cetch
+        return null
     }
 
     async createToken(
@@ -63,28 +65,11 @@ export class AuthService {
     }
 
 
-    // verify token: token verification against JWT_SECRET
-    // async verifyToken(token: string) {
-    //     try {
-    //         if (!process.env.JWT_SECRET) {
-    //             throw new Error('JWT_SECRET is not defined in environment variables');
-    //         }
-
-    //         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    //         return decoded;
-    //     } catch (error) {
-    //         console.error({ msg: "cannot verify token", error });
-    //         return null;
-    //     }
-    // }
-
-
 
     // hash password
-    async hashPassword(password: string, salt: number | string) {
-        let hash: string;
+    async hashPassword(password: string, salt: number): Promise<string|null> {
         try {
-            hash = await bcrypt.hash(password, salt)
+            const hash = await bcrypt.hash(password, salt)
             return hash;
         } catch (error) {
             console.log({ msg: "cannt hashPassword ", error });
