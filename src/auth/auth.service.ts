@@ -12,7 +12,7 @@ import rl from "readline-sync"
 export class AuthService {
     constructor(public userService: UsersService, private jwtService: JwtService) { }
 
-    async login(name: string, password: string): Promise<string | null> {
+    async login(name: string, password: string): Promise<object | string | null> {
         let token: string;
         const user = await this.userService.findOne(name);
         console.log("🚀 ~ login ~ user:", user)
@@ -25,12 +25,12 @@ export class AuthService {
                 token = await this.createToken(user)
                 if (user?.role === "soldier") {
                     if (token) {
-                        return `login ${user.role} successfully! token: ${token}`;
-                    } 
+                        return { msg: "success create token",token: token }
+                    }
                 }
                 else if (user?.role === "commander") {
                     if (token) {
-                        return `login ${user.role} successfully! token: ${token}`;
+                        return { msg: "success create token",token: token }
                     }
                 }
 
@@ -46,7 +46,7 @@ export class AuthService {
     async register(name: string, password: string,) {
         try {
             const users = await this.userService.getAllUsers()
-            const user = users.find(u => u.name == name  && u.password === password);
+            const user = users.find(u => u.name == name && u.password === password);
             if (user) {
                 return "user allready exist"
             }
@@ -64,8 +64,8 @@ export class AuthService {
     async createToken(user: User): Promise<string> {
         const payload = { name: user.name, role: user.role };
         return await this.jwtService.signAsync(payload)
-    }  
-    
+    }
+
 
 
 

@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
+import { Response } from 'express';
 
 
 
@@ -8,9 +9,11 @@ import { UsersService } from 'src/users/users.service';
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
     @Post("login")
-    async login(@Body() loginDto: { name: string; password: string }) {
-        const messge = await this.authService.login(loginDto.name, loginDto.password)
-        return { message: messge }
+    async login(@Body() loginDto: { name: string; password: string }, @Res() res: Response
+    ) {
+        const token = await this.authService.login(loginDto.name, loginDto.password)
+        res.setHeader('Authorization', `Bearer ${token}`)
+        return res.status(201).json({ message: 'Login successful' });
     }
 
     @Post("register")
