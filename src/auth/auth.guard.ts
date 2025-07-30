@@ -13,8 +13,11 @@ export class AuthGuard implements CanActivate {
     constructor(private jwtService: JwtService) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
+        console.log("try to pass the guard");
         const request = context.switchToHttp().getRequest();// גישה לבקשה הנוכחית אחרי שהיא מומרת לפורמט הרגיל של EXPRESS
+        console.log("🚀 ~ canActivate ~ request:", request)
         const token = this.extractTokenFromHeader(request);
+        console.log("🚀 ~ canActivate ~ token:", token)
         if (!token) {
             throw new UnauthorizedException();
         }//אם לא קיים יזרוק שגיאה
@@ -35,6 +38,9 @@ export class AuthGuard implements CanActivate {
 
     private extractTokenFromHeader(request: Request): string | undefined {
         const [type, token] = request.headers.authorization?.split(' ') ?? [];
+        console.log("🚀 ~ extractTokenFromHeader ~ token:", token)
+        console.log("🚀 ~ extractTokenFromHeader ~ type:", type)
+        
         return type === 'Bearer' ? token : undefined;//חילוץ הטוקן מההדר
     }
 }
