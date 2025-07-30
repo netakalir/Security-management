@@ -6,6 +6,6 @@ import { AssignmentsService } from './assignments.service';
   controllers: [AssignmentsController],//בקרים שיטפלו בבקשות HTTP
   providers: [AssignmentsService],//שירותים שאני מזריק למודול ונותן לו אפשרות להשתמש בהם
   imports:[],//מודלים אחרים שאני רוצה להתשמש בהם
-  exports:[]//מודלים שאני רוצה לייצא לשימוש במודלים אחרים
+  exports:[AssignmentsService]//מודלים שאני רוצה לייצא לשימוש במודלים אחרים
 })
 export class AssignmentsModule {}

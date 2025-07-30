@@ -1,8 +1,20 @@
 import { Injectable } from '@nestjs/common';
 
+export type Assignments = {
+  id: string
+  userId: number;
+  shiftId: number;
+}
+
 @Injectable()
 export class AssignmentsService {
-  getAll() {
-    
-  }
+    public assignments: Assignments[] = [{id:"5",userId:6,shiftId:9}]
+    async getAll() {
+      return this?.assignments
+    }
+
+    async getOne(id: string) {
+      const assignment = this.assignments.find(assignment => assignment.id === id)
+      return assignment
+    }
 }
