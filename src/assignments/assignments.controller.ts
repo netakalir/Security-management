@@ -5,8 +5,8 @@ import { AssignmentsService } from './assignments.service';
 export class AssignmentsController {
     constructor(private readonly assignmentsService: AssignmentsService) { }
 
-    @Get()
-    getAns(): string {
-        return this.assignmentsService.getHello()
-    }
+    // @Get()
+    // getAll(): string {
+    //     return this.assignmentsService.getAll()
+    // }
 }
