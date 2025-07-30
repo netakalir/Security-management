@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+// import { SequelizeModule } from '@nestjs/sequelize';
+import { User } from '../DbConfig/user.service'; 
+
+
 
 @Module({
   controllers: [UsersController],//בקרים שיטפלו בבקשות HTTP

@@ -9,7 +9,7 @@ export type User = {
 @Injectable()
 export class UsersService {
     public users: User[] = []
-    getAllUsers() {
+    async getAllUsers() {
         return this?.users;
     }
 
