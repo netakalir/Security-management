@@ -9,6 +9,7 @@ export type User = {
 @Injectable()
 export class UsersService {
     public users: User[] = []
+
     async getAllUsers() {
         return this?.users;
     }
@@ -16,6 +17,12 @@ export class UsersService {
     async findOne(name: string) {
         const user = this.users.find(user => user.name === name)
         return user
+    }
+    async createUser(user: User) {
+        const newUser = { name: user.name, role:"soldier", password: user.password }
+        // this.users.push(newUser)
+        return newUser
+
     }
 
 }
