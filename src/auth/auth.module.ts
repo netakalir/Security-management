@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth.constants';
 
 @Module({
-  imports:[UsersModule,JwtModule.register({global:true,secret:jwtConstants.secret,signOptions:{expiresIn:'5h'}})],//מודלים אחרים שאני רוצה להתשמש בהם
+  imports:[UsersModule,JwtModule.register({global:true,secret:jwtConstants.secret,signOptions:{expiresIn:'10h'}})],//מודלים אחרים שאני רוצה להתשמש בהם
   exports:[AuthService],//מודלים שאני רוצה לייצא לשימוש במודלים אחרים
   controllers: [AuthController],//בקרים שיטפלו בבקשות HTTP
   providers: [AuthService]//שירותים שאני מזריק למודול מהמודל הנוכחי בלבד ונותן לו אפשרות להשתמש בהם

@@ -15,7 +15,7 @@ export class AuthService {
     async login(name: string, password: string): Promise<string | null> {
         let token: string;
         const user = await this.userService.findOne(name);
-        console.log(user);
+        console.log("🚀 ~ login ~ user:", user)
         if (user) {
             try {
                 const isVerify = await this.verifyPassword(password, user.password || "")
@@ -36,7 +36,7 @@ export class AuthService {
 
 
             } catch (error) {
-                console.log(error);
+                console.log("🚀 ~ login ~ error:", error)
             }
 
         }
@@ -45,7 +45,7 @@ export class AuthService {
 
     async register(name: string, password: string,) {
         try {
-            const users = this.userService.getAllUsers()
+            const users = await this.userService.getAllUsers()
             const user = users.find(u => u.name == name  && u.password === password);
             if (user) {
                 return "user allready exist"
@@ -90,7 +90,7 @@ export class AuthService {
             }
             return true
         } catch (error) {
-            console.log(error);
+            console.log("🚀 ~ verifyPassword ~ error:", error)
         }
     }
 }
