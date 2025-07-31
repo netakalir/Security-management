@@ -22,7 +22,7 @@ export class ShiftsService {
 
     async createShift(shift: Shifts) {
         const newshift = { id: String(Date.now()), startTime:shift.startTime , endTime: shift.endTime, location:shift.location}
-        // this.assignments.push(newAssignments)
+        this.shifts.push({id: String(Date.now()), startTime:shift.startTime , endTime: shift.endTime, location:shift.location})
         return newshift
     }
 }
