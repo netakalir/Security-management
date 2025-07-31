@@ -11,8 +11,9 @@ export class AuthController {
     @Post("login")
     async login(@Body() loginDto: { name: string; password: string }, @Res() res: Response
     ) {
-        const token = await this.authService.login(loginDto.name, loginDto.password)
-        res.setHeader('Authorization', `Bearer ${token}`)
+        const Response = await this.authService.login(loginDto.name, loginDto.password)
+        if (Response?.token)
+            res.setHeader('Authorization', `Bearer ${Response.token}`)
         return res.status(201).json({ message: 'Login successful' });
     }
 

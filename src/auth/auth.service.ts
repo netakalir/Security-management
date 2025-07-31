@@ -12,7 +12,7 @@ import rl from "readline-sync"
 export class AuthService {
     constructor(public userService: UsersService, private jwtService: JwtService) { }
 
-    async login(name: string, password: string): Promise<object | string | null> {
+    async login(name: string, password: string): Promise<{token: string | null, msg: string}> {
         let token: string;
         const user = await this.userService.findOne(name);
         console.log("🚀 ~ login ~ user:", user)
@@ -20,7 +20,7 @@ export class AuthService {
             try {
                 const isVerify = await this.verifyPassword(password, user.password || "")
                 if (!isVerify) {
-                    return "password not verify"
+                    return {token: null, msg: "tokne not verify"}
                 }
                 token = await this.createToken(user)
                 if (user?.role === "soldier") {
@@ -40,7 +40,9 @@ export class AuthService {
             }
 
         }
+
         throw new UnauthorizedException();
+        return {token: null, msg:""}
     }
 
     async register(name: string, password: string,) {
