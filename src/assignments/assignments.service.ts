@@ -20,7 +20,7 @@ export class AssignmentsService {
 
   async createAssignment(assignment: Assignments) {
     const newAssignments = { id: String(Date.now()), userId: assignment.userId, shiftId: assignment.shiftId }
-    // this.assignments.push(newAssignments)
+    this.assignments.push(newAssignments)
     return newAssignments
   }
 }
